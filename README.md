@@ -1,3 +1,7 @@
 # ha-kubernetes-cluster-provision
 
-The KSOX Project
+```
+skaffold run -f skaffold-metallb.yaml
+skaffold run -f skaffold-cert-manager.yaml
+skaffold run -f skaffold-ingress-controller.yaml
+```
