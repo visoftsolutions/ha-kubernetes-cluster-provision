@@ -14,4 +14,6 @@ deploy:
         remoteChart: metallb
         namespace: metallb-system
         createNamespace: true
+        setValues:
+          installCRDs: true
   kubectl: {}
