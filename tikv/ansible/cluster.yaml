@@ -1,0 +1,5 @@
+- name: TIKV Ansible
+  hosts: tikv
+  become: yes
+  roles:
+    - format_mount_disk

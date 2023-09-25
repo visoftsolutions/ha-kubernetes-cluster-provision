@@ -1,0 +1,25 @@
+- name: Mount the disk
+  become: true
+  mount:
+    path: "/mnt/disks/{{ disk_path }}"
+    src: "/dev/{{ disk_path }}"
+    fstype: ext4
+    state: unmounted
+
+- name: Format the disk
+  become: true
+  command: mkfs.ext4 /dev/{{ disk_path }}
+
+- name: Create a mount directory
+  file:
+    path: "/mnt/disks/{{ disk_path }}"
+    state: directory
+
+- name: Mount the disk
+  become: true
+  mount:
+    path: "/mnt/disks/{{ disk_path }}"
+    src: "/dev/{{ disk_path }}"
+    fstype: ext4
+    state: mounted
+    boot: true
