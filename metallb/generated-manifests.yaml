@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb-system
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1596,6 +1601,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-controller
+  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1615,6 +1621,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-speaker
+  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

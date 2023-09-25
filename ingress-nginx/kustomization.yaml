@@ -12,3 +12,6 @@ helmCharts:
     releaseName: ingress-nginx-internal
     namespace: kube-system
     valuesFile: ingress-nginx-internal-values.yaml
+
+resources:
+  - namespace.yaml

@@ -1,7 +1,9 @@
 # ha-kubernetes-cluster-provision
 
 ```
-skaffold run -f skaffold-metallb.yaml
-skaffold run -f skaffold-cert-manager.yaml
-skaffold run -f skaffold-ingress-nginx.yaml
+./kustomize build --enable-helm metallb/ > metallb/generated-manifests.yaml
+kubectl apply -f metallb/generated-manifests.yaml 
 ```
+
+# Remember to purge
+/var/lib/rook

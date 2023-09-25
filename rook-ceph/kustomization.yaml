@@ -12,3 +12,6 @@ helmCharts:
   releaseName: rook-ceph-cluster
   namespace: rook-ceph
   valuesFile: rook-ceph-cluster-values.yaml
+
+resources:
+  - namespace.yaml

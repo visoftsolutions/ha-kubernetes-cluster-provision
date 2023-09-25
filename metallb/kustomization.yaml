@@ -9,4 +9,5 @@ helmCharts:
   valuesFile: values.yaml
 
 resources:
+  - namespace.yaml
   - metallb.yaml
