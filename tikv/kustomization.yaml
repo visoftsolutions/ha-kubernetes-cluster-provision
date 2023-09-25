@@ -1,2 +1,3 @@
 resources:
+  - https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml
   - https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/local-dind/local-volume-provisioner.yaml
