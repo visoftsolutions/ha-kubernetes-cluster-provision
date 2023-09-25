@@ -1,0 +1,11 @@
+helmCharts:
+  - name: ingress-nginx
+    repo: https://kubernetes.github.io/ingress-nginx
+    releaseName: ingress-nginx-external
+    namespace: kube-system
+    valuesFile: ingress-nginx-external-values.yaml
+  - name: ingress-nginx
+    repo: https://kubernetes.github.io/ingress-nginx
+    releaseName: ingress-nginx-internal
+    namespace: kube-system
+    valuesFile: ingress-nginx-internal-values.yaml
