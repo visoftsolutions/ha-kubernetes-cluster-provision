@@ -6,18 +6,18 @@ metadata:
     storageclass.kubernetes.io/is-default-class: "true"
   name: ceph-block
 parameters:
-  clusterID: rook-ceph2
+  clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   imageFeatures: layering
   imageFormat: "2"
   pool: ceph-blockpool
-provisioner: rook-ceph2.rbd.csi.ceph.com
+provisioner: rook-ceph.rbd.csi.ceph.com
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
@@ -27,9 +27,9 @@ metadata:
   name: ceph-bucket
 parameters:
   objectStoreName: ceph-objectstore
-  objectStoreNamespace: rook-ceph2
+  objectStoreNamespace: rook-ceph
   region: us-east-1
-provisioner: rook-ceph2.ceph.rook.io/bucket
+provisioner: rook-ceph.ceph.rook.io/bucket
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
@@ -41,17 +41,17 @@ metadata:
     storageclass.kubernetes.io/is-default-class: "false"
   name: ceph-filesystem
 parameters:
-  clusterID: rook-ceph2
+  clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph2
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   fsName: ceph-filesystem
   pool: ceph-filesystem-data0
-provisioner: rook-ceph2.cephfs.csi.ceph.com
+provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
@@ -21264,7 +21264,7 @@ metadata:
     app.kubernetes.io/name: cosi-driver-ceph
     app.kubernetes.io/part-of: container-object-storage-interface
   name: objectstorage-provisioner
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -21277,7 +21277,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-cmd-reporter
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -21290,7 +21290,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -21303,13 +21303,13 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-ceph-purge-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -21322,7 +21322,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-rgw
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -21335,37 +21335,37 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-csi-cephfs-plugin-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-csi-cephfs-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-csi-rbd-plugin-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-csi-rbd-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: cephfs-external-provisioner-cfg
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - coordination.k8s.io
@@ -21383,7 +21383,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rbd-external-provisioner-cfg
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - coordination.k8s.io
@@ -21401,7 +21401,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rook-ceph-cmd-reporter
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -21420,7 +21420,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -21493,7 +21493,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rook-ceph-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -21529,7 +21529,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rook-ceph-purge-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -21566,7 +21566,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: rook-ceph-rgw
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -21586,7 +21586,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 rules:
 - apiGroups:
   - ""
@@ -22438,7 +22438,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: cephfs-csi-provisioner-role-cfg
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22446,13 +22446,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rbd-csi-provisioner-role-cfg
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22460,13 +22460,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-cluster-mgmt
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -22474,13 +22474,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-cmd-reporter
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22488,13 +22488,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-cmd-reporter
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22502,13 +22502,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-mgr-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -22516,13 +22516,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22530,13 +22530,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-purge-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22544,13 +22544,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-purge-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: rook-ceph-rgw
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22558,7 +22558,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-rgw
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -22571,7 +22571,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -22579,7 +22579,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22592,7 +22592,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-plugin-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22605,7 +22605,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22622,7 +22622,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: objectstorage-provisioner
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22635,7 +22635,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-plugin-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22648,7 +22648,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-provisioner-sa
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22668,7 +22668,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22681,7 +22681,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22694,7 +22694,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22707,7 +22707,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-osd
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22727,7 +22727,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: v1
 data:
@@ -22966,7 +22966,7 @@ data:
 kind: ConfigMap
 metadata:
   name: rook-ceph-operator-config
-  namespace: rook-ceph2
+  namespace: rook-ceph
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -22979,7 +22979,7 @@ metadata:
     operator: rook
     storage-backend: ceph
   name: rook-ceph-operator
-  namespace: rook-ceph2
+  namespace: rook-ceph
 spec:
   replicas: 1
   selector:
@@ -23058,7 +23058,7 @@ metadata:
   labels:
     app: rook-ceph-tools
   name: rook-ceph-tools
-  namespace: rook-ceph2
+  namespace: rook-ceph
 spec:
   replicas: 1
   selector:
@@ -23188,7 +23188,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
   name: ceph-blockpool
-  namespace: rook-ceph2
+  namespace: rook-ceph
 spec:
   failureDomain: host
   replicated:
@@ -23197,8 +23197,8 @@ spec:
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
 metadata:
-  name: rook-ceph2
-  namespace: rook-ceph2
+  name: rook-ceph
+  namespace: rook-ceph
 spec:
   cephVersion:
     allowUnsupported: false
@@ -23337,7 +23337,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephFilesystem
 metadata:
   name: ceph-filesystem
-  namespace: rook-ceph2
+  namespace: rook-ceph
 spec:
   dataPools:
   - failureDomain: host
@@ -23363,7 +23363,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephObjectStore
 metadata:
   name: ceph-objectstore
-  namespace: rook-ceph2
+  namespace: rook-ceph
 spec:
   dataPool:
     erasureCoded:

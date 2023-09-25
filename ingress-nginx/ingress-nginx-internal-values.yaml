@@ -1,5 +1,5 @@
 controller:
   kind: DaemonSet
   ingressClassResource:
-    name: ingress-nginx-external
+    name: ingress-nginx-internal
     controllerValue: "k8s.io/ingress-nginx-internal"
