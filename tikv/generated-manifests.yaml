@@ -9244,7 +9244,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/dm
+                    default: docker.io/pingcap/dm
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -11942,7 +11942,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/dm
+                    default: docker.io/pingcap/dm
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -20434,7 +20434,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/pd
+                    default: docker.io/pingcap/pd
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -23094,7 +23094,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/tidb-binlog
+                    default: docker.io/pingcap/tidb-binlog
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -25649,7 +25649,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/ticdc
+                    default: docker.io/pingcap/ticdc
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -28193,7 +28193,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/tidb
+                    default: docker.io/pingcap/tidb
                     type: string
                   binlogEnabled:
                     type: boolean
@@ -30950,7 +30950,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/tiflash
+                    default: docker.io/pingcap/tiflash
                     type: string
                   config:
                     properties:
@@ -33564,7 +33564,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/tikv
+                    default: docker.io/pingcap/tikv
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -36169,7 +36169,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/tiproxy
+                    default: docker.io/pingcap/tiproxy
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true
@@ -40188,7 +40188,7 @@ spec:
                   type: string
                 type: object
               baseImage:
-                default: pingcap/tidb-dashboard
+                default: docker.io/pingcap/tidb-dashboard
                 type: string
               clusters:
                 items:
@@ -47747,7 +47747,7 @@ spec:
                       type: string
                     type: object
                   baseImage:
-                    default: pingcap/ng-monitoring
+                    default: docker.io/pingcap/ng-monitoring
                     type: string
                   config:
                     x-kubernetes-preserve-unknown-fields: true

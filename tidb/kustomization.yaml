@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tidb-admin
+helmCharts:
+- name: tidb-operator
+  repo: https://charts.pingcap.org/
+  releaseName: tidb-operator
+  namespace: tidb-admin
+  valuesFile: values-tidb-operator.yaml
+- name: tidb-cluster
+  repo: https://charts.pingcap.org/
+  releaseName: tidb-cluster
+  namespace: tidb-admin
+  valuesFile: values-tidb-cluster.yaml
+
+resources:
+  - namespace.yaml

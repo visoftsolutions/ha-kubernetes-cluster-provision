@@ -1,0 +1,783 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tidb-admin
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: controller-manager
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-operator
+    helm.sh/chart: tidb-operator-v1.5.0
+  name: tidb-controller-manager
+  namespace: tidb-admin
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+rules:
+- apiGroups:
+  - pingcap.com
+  resourceNames:
+  - tidb-cluster
+  resources:
+  - tidbclusters
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: controller-manager
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-operator
+    helm.sh/chart: tidb-operator-v1.5.0
+  name: tidb-operator:tidb-controller-manager
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - create
+  - get
+  - update
+  - delete
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - update
+  - get
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  - controllerrevisions
+  verbs:
+  - '*'
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - '*'
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - '*'
+- apiGroups:
+  - apps.pingcap.com
+  resources:
+  - statefulsets
+  - statefulsets/status
+  verbs:
+  - '*'
+- apiGroups:
+  - pingcap.com
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+  - update
+  - create
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterroles
+  - roles
+  verbs:
+  - escalate
+  - create
+  - get
+  - update
+  - delete
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  - clusterrolebindings
+  verbs:
+  - create
+  - get
+  - update
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tidb-cluster-discovery
+subjects:
+- kind: ServiceAccount
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: controller-manager
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-operator
+    helm.sh/chart: tidb-operator-v1.5.0
+  name: tidb-operator:tidb-controller-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tidb-operator:tidb-controller-manager
+subjects:
+- kind: ServiceAccount
+  name: tidb-controller-manager
+  namespace: tidb-admin
+---
+apiVersion: v1
+data:
+  config-file: |-
+    [log]
+    level = "info"
+    [replication]
+    location-labels = ["region", "zone", "rack", "host"]
+  startup-script: |-
+    #!/bin/sh
+
+    # This script is used to start pd containers in kubernetes cluster
+
+    # Use DownwardAPIVolumeFiles to store informations of the cluster:
+    # https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api
+    #
+    #   runmode="normal/debug"
+    #
+
+    set -uo pipefail
+
+
+
+    ANNOTATIONS="/etc/podinfo/annotations"
+
+    if [[ ! -f "${ANNOTATIONS}" ]]
+    then
+        echo "${ANNOTATIONS} does't exist, exiting."
+        exit 1
+    fi
+    source ${ANNOTATIONS} 2>/dev/null
+
+    runmode=${runmode:-normal}
+    if [[ X${runmode} == Xdebug ]]
+    then
+        echo "entering debug mode."
+        tail -f /dev/null
+    fi
+
+    # Use HOSTNAME if POD_NAME is unset for backward compatibility.
+    POD_NAME=${POD_NAME:-$HOSTNAME}
+    # the general form of variable PEER_SERVICE_NAME is: "<clusterName>-pd-peer"
+    cluster_name=`echo ${PEER_SERVICE_NAME} | sed 's/-pd-peer//'`
+    domain="${POD_NAME}.${PEER_SERVICE_NAME}.${NAMESPACE}.svc"
+    discovery_url="${cluster_name}-discovery.${NAMESPACE}.svc:10261"
+    encoded_domain_url=`echo ${domain}:2380 | base64 | tr "\n" " " | sed "s/ //g"`
+
+    elapseTime=0
+    period=1
+    threshold=30
+    while true; do
+        sleep ${period}
+        elapseTime=$(( elapseTime+period ))
+
+        if [[ ${elapseTime} -ge ${threshold} ]]
+        then
+            echo "waiting for pd cluster ready timeout" >&2
+            exit 1
+        fi
+
+        if nslookup ${domain} 2>/dev/null
+        then
+            echo "nslookup domain ${domain}.svc success"
+            break
+        else
+            echo "nslookup domain ${domain} failed" >&2
+        fi
+    done
+
+    ARGS="--data-dir=/var/lib/pd \
+    --name=${POD_NAME} \
+    --peer-urls=http://0.0.0.0:2380 \
+    --advertise-peer-urls=http://${domain}:2380 \
+    --client-urls=http://0.0.0.0:2379 \
+    --advertise-client-urls=http://${domain}:2379 \
+    --config=/etc/pd/pd.toml \
+    "
+
+    if [[ -f /var/lib/pd/join ]]
+    then
+        # The content of the join file is:
+        #   demo-pd-0=http://demo-pd-0.demo-pd-peer.demo.svc:2380,demo-pd-1=http://demo-pd-1.demo-pd-peer.demo.svc:2380
+        # The --join args must be:
+        #   --join=http://demo-pd-0.demo-pd-peer.demo.svc:2380,http://demo-pd-1.demo-pd-peer.demo.svc:2380
+        join=`cat /var/lib/pd/join | tr "," "\n" | awk -F'=' '{print $2}' | tr "\n" ","`
+        join=${join%,}
+        ARGS="${ARGS} --join=${join}"
+    elif [[ ! -d /var/lib/pd/member/wal ]]
+    then
+        until result=$(wget -qO- -T 3 http://${discovery_url}/new/${encoded_domain_url} 2>/dev/null); do
+            echo "waiting for discovery service to return start args ..."
+            sleep $((RANDOM % 5))
+        done
+        ARGS="${ARGS}${result}"
+    fi
+
+    echo "starting pd-server ..."
+    sleep $((RANDOM % 10))
+    echo "/pd-server ${ARGS}"
+    exec /pd-server ${ARGS}
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: pd
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-pd-cfa0d77a
+  namespace: tidb-admin
+---
+apiVersion: v1
+data:
+  config-file: |-
+    [log]
+    level = "info"
+  startup-script: |-
+    #!/bin/sh
+
+    # This script is used to start tidb containers in kubernetes cluster
+
+    # Use DownwardAPIVolumeFiles to store informations of the cluster:
+    # https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api
+    #
+    #   runmode="normal/debug"
+    #
+    set -uo pipefail
+
+
+
+    ANNOTATIONS="/etc/podinfo/annotations"
+
+    if [[ ! -f "${ANNOTATIONS}" ]]
+    then
+        echo "${ANNOTATIONS} does't exist, exiting."
+        exit 1
+    fi
+    source ${ANNOTATIONS} 2>/dev/null
+    runmode=${runmode:-normal}
+    if [[ X${runmode} == Xdebug ]]
+    then
+        echo "entering debug mode."
+        tail -f /dev/null
+    fi
+
+    # Use HOSTNAME if POD_NAME is unset for backward compatibility.
+    POD_NAME=${POD_NAME:-$HOSTNAME}
+    ARGS="--store=tikv \
+    --advertise-address=${POD_NAME}.${HEADLESS_SERVICE_NAME}.${NAMESPACE}.svc \
+    --host=0.0.0.0 \
+    --path=${CLUSTER_NAME}-pd:2379 \
+    --config=/etc/tidb/tidb.toml
+    "
+
+    if [[ X${BINLOG_ENABLED:-} == Xtrue ]]
+    then
+        ARGS="${ARGS} --enable-binlog=true"
+    fi
+
+    SLOW_LOG_FILE=${SLOW_LOG_FILE:-""}
+    if [[ ! -z "${SLOW_LOG_FILE}" ]]
+    then
+        ARGS="${ARGS} --log-slow-query=${SLOW_LOG_FILE:-}"
+    fi
+
+    echo "start tidb-server ..."
+    echo "/tidb-server ${ARGS}"
+    exec /tidb-server ${ARGS}
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: tidb
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-tidb
+  namespace: tidb-admin
+---
+apiVersion: v1
+data:
+  config-file: |-
+    [log]
+    level = "info"
+  startup-script: |-
+    #!/bin/sh
+
+    # This script is used to start tidb containers in kubernetes cluster
+
+    # Use DownwardAPIVolumeFiles to store informations of the cluster:
+    # https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api
+    #
+    #   runmode="normal/debug"
+    #
+    set -uo pipefail
+
+
+
+    ANNOTATIONS="/etc/podinfo/annotations"
+
+    if [[ ! -f "${ANNOTATIONS}" ]]
+    then
+        echo "${ANNOTATIONS} does't exist, exiting."
+        exit 1
+    fi
+    source ${ANNOTATIONS} 2>/dev/null
+    runmode=${runmode:-normal}
+    if [[ X${runmode} == Xdebug ]]
+    then
+        echo "entering debug mode."
+        tail -f /dev/null
+    fi
+
+    # Use HOSTNAME if POD_NAME is unset for backward compatibility.
+    POD_NAME=${POD_NAME:-$HOSTNAME}
+    ARGS="--store=tikv \
+    --advertise-address=${POD_NAME}.${HEADLESS_SERVICE_NAME}.${NAMESPACE}.svc \
+    --host=0.0.0.0 \
+    --path=${CLUSTER_NAME}-pd:2379 \
+    --config=/etc/tidb/tidb.toml
+    "
+
+    if [[ X${BINLOG_ENABLED:-} == Xtrue ]]
+    then
+        ARGS="${ARGS} --enable-binlog=true"
+    fi
+
+    SLOW_LOG_FILE=${SLOW_LOG_FILE:-""}
+    if [[ ! -z "${SLOW_LOG_FILE}" ]]
+    then
+        ARGS="${ARGS} --log-slow-query=${SLOW_LOG_FILE:-}"
+    fi
+
+    echo "start tidb-server ..."
+    echo "/tidb-server ${ARGS}"
+    exec /tidb-server ${ARGS}
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: tidb
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-tidb-866b9771
+  namespace: tidb-admin
+---
+apiVersion: v1
+data:
+  config-file: log-level = "info"
+  startup-script: "#!/bin/sh\n\n# This script is used to start tikv containers in
+    kubernetes cluster\n\n# Use DownwardAPIVolumeFiles to store informations of the
+    cluster:\n# https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/#the-downward-api\n#\n#
+    \  runmode=\"normal/debug\"\n#\n\nset -uo pipefail\n\n\n\nANNOTATIONS=\"/etc/podinfo/annotations\"\n\nif
+    [[ ! -f \"${ANNOTATIONS}\" ]]\nthen\n    echo \"${ANNOTATIONS} does't exist, exiting.\"\n
+    \   exit 1\nfi\nsource ${ANNOTATIONS} 2>/dev/null\n\nrunmode=${runmode:-normal}\nif
+    [[ X${runmode} == Xdebug ]]\nthen\n\techo \"entering debug mode.\"\n\ttail -f
+    /dev/null\nfi\n\n# Use HOSTNAME if POD_NAME is unset for backward compatibility.\nPOD_NAME=${POD_NAME:-$HOSTNAME}\nARGS=\"--pd=http://${CLUSTER_NAME}-pd:2379
+    \\\n--advertise-addr=${POD_NAME}.${HEADLESS_SERVICE_NAME}.${NAMESPACE}.svc:20160
+    \\\n--addr=0.0.0.0:20160 \\\n--status-addr=0.0.0.0:20180 \\\n--data-dir=/var/lib/tikv
+    \\\n--capacity=${CAPACITY} \\\n--config=/etc/tikv/tikv.toml\n\"\n\nif [ ! -z \"${STORE_LABELS:-}\"
+    ]; then\n  LABELS=\" --labels ${STORE_LABELS} \"\n  ARGS=\"${ARGS}${LABELS}\"\nfi\n\n\necho
+    \"starting tikv-server ...\"\necho \"/tikv-server ${ARGS}\"\nexec /tikv-server
+    ${ARGS}"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: tikv
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-tikv-1c8d5543
+  namespace: tidb-admin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+spec:
+  ports:
+  - name: discovery
+    port: 10261
+    protocol: TCP
+    targetPort: 10261
+  selector:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/name: tidb-cluster
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: tidb
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-tidb
+  namespace: tidb-admin
+spec:
+  ports:
+  - name: mysql-client
+    port: 4000
+    protocol: TCP
+    targetPort: 4000
+  - name: status
+    port: 10080
+    protocol: TCP
+    targetPort: 10080
+  selector:
+    app.kubernetes.io/component: tidb
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/name: tidb-cluster
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster-discovery
+  namespace: tidb-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: discovery
+      app.kubernetes.io/instance: tidb-cluster
+      app.kubernetes.io/name: tidb-cluster
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: discovery
+        app.kubernetes.io/instance: tidb-cluster
+        app.kubernetes.io/name: tidb-cluster
+    spec:
+      containers:
+      - command:
+        - /usr/local/bin/tidb-discovery
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: docker.io/pingcap/tidb-operator:v1.6.0-alpha.8
+        imagePullPolicy: IfNotPresent
+        name: discovery
+        resources:
+          limits:
+            cpu: 250m
+            memory: 150Mi
+          requests:
+            cpu: 80m
+            memory: 50Mi
+      serviceAccount: tidb-cluster-discovery
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: controller-manager
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-operator
+    helm.sh/chart: tidb-operator-v1.5.0
+  name: tidb-controller-manager
+  namespace: tidb-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller-manager
+      app.kubernetes.io/instance: tidb-operator
+      app.kubernetes.io/name: tidb-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: controller-manager
+        app.kubernetes.io/instance: tidb-operator
+        app.kubernetes.io/name: tidb-operator
+    spec:
+      containers:
+      - command:
+        - /usr/local/bin/tidb-controller-manager
+        - -tidb-backup-manager-image=docker.io/pingcap/tidb-backup-manager:v1.6.0-alpha.8
+        - -tidb-discovery-image=docker.io/pingcap/tidb-operator:v1.6.0-alpha.8
+        - -cluster-scoped=true
+        - -cluster-permission-node=true
+        - -cluster-permission-pv=true
+        - -cluster-permission-sc=true
+        - -auto-failover=true
+        - -pd-failover-period=5m
+        - -tikv-failover-period=5m
+        - -tiflash-failover-period=5m
+        - -tidb-failover-period=5m
+        - -dm-master-failover-period=5m
+        - -dm-worker-failover-period=5m
+        - -v=2
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: TZ
+          value: UTC
+        image: docker.io/pingcap/tidb-operator:v1.6.0-alpha.8
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          tcpSocket:
+            port: 6060
+        name: tidb-operator
+        resources:
+          requests:
+            cpu: 80m
+            memory: 50Mi
+      serviceAccount: tidb-controller-manager
+---
+apiVersion: pingcap.com/v1alpha1
+kind: TidbCluster
+metadata:
+  annotations:
+    pingcap.com/ha-topology-key: kubernetes.io/hostname
+    pingcap.com/pd.tidb-cluster-pd.sha: cfa0d77a
+    pingcap.com/tidb.tidb-cluster-tidb.sha: 866b9771
+    pingcap.com/tikv.tidb-cluster-tikv.sha: 1c8d5543
+  labels:
+    app.kubernetes.io/component: tidb-cluster
+    app.kubernetes.io/instance: tidb-cluster
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tidb-cluster
+    helm.sh/chart: tidb-cluster-v1.5.0
+  name: tidb-cluster
+  namespace: tidb-admin
+spec:
+  enablePVReclaim: false
+  helper:
+    image: docker.io/busybox:1.34.1
+  pd:
+    affinity: {}
+    hostNetwork: false
+    image: docker.io/pingcap/pd:v6.5.0
+    imagePullPolicy: IfNotPresent
+    limits: {}
+    nodeSelector: {}
+    replicas: 3
+    requests:
+      storage: 1Gi
+    storageClassName: local-storage
+  pvReclaimPolicy: Retain
+  schedulerName: default-scheduler
+  services:
+  - name: pd
+    type: ClusterIP
+  tidb:
+    affinity: {}
+    binlogEnabled: false
+    hostNetwork: false
+    image: docker.io/pingcap/tidb:v6.5.0
+    imagePullPolicy: IfNotPresent
+    limits: {}
+    maxFailoverCount: 3
+    nodeSelector: {}
+    replicas: 2
+    requests: {}
+    separateSlowLog: true
+    slowLogTailer:
+      image: busybox:1.33.0
+      imagePullPolicy: IfNotPresent
+      limits:
+        cpu: 100m
+        memory: 50Mi
+      requests:
+        cpu: 20m
+        memory: 5Mi
+    tlsClient:
+      enabled: false
+  tikv:
+    affinity: {}
+    hostNetwork: false
+    image: docker.io/pingcap/tikv:v6.5.0
+    imagePullPolicy: IfNotPresent
+    limits: {}
+    maxFailoverCount: 3
+    nodeSelector: {}
+    replicas: 3
+    requests:
+      storage: 10Gi
+    storageClassName: local-storage
+  timezone: UTC
+  tiproxy:
+    baseImage: docker.io/pingcap/tiproxy
+    imagePullPolicy: IfNotPresent
+    limits: {}
+    replicas: 0
+    requests:
+      storage: 1Gi
+    storageClassName: local-storage
+    version: v6.5.0
+  tlsCluster:
+    enabled: false
