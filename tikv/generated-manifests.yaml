@@ -1,8 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: local-path-storage
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: local-storage
-provisioner: kubernetes.io/no-provisioner
+provisioner: rancher.io/local-path
+reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -48851,115 +48857,129 @@ status:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: local-storage-admin
-  namespace: kube-system
+  name: local-path-provisioner-service-account
+  namespace: local-path-storage
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: local-storage-provisioner-node-clusterrole
-  namespace: kube-system
+  name: local-path-provisioner-role
 rules:
 - apiGroups:
   - ""
   resources:
   - nodes
+  - persistentvolumeclaims
+  - configmaps
   verbs:
   - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  - persistentvolumes
+  - pods
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: local-storage-provisioner-node-binding
-  namespace: kube-system
+  name: local-path-provisioner-bind
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: local-storage-provisioner-node-clusterrole
+  name: local-path-provisioner-role
 subjects:
 - kind: ServiceAccount
-  name: local-storage-admin
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: local-storage-provisioner-pv-binding
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:persistent-volume-provisioner
-subjects:
-- kind: ServiceAccount
-  name: local-storage-admin
-  namespace: kube-system
+  name: local-path-provisioner-service-account
+  namespace: local-path-storage
 ---
 apiVersion: v1
 data:
-  nodeLabelsForPV: |
-    - kubernetes.io/hostname
-  setPVOwnerRef: "true"
-  storageClassMap: |
-    local-storage:
-      hostDir: /mnt/disks
-      mountDir: /mnt/disks
+  config.json: |-
+    {
+            "nodePathMap":[
+            {
+                    "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
+                    "paths":["/mnt/disks/sda/"]
+            }
+            ]
+    }
+  helperPod.yaml: |-
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: helper-pod
+    spec:
+      containers:
+      - name: helper-pod
+        image: docker.io/busybox
+        imagePullPolicy: IfNotPresent
+  setup: |-
+    #!/bin/sh
+    set -eu
+    mkdir -m 0777 -p "$VOL_DIR"
+  teardown: |-
+    #!/bin/sh
+    set -eu
+    rm -rf "$VOL_DIR"
 kind: ConfigMap
 metadata:
-  name: local-provisioner-config
-  namespace: kube-system
+  name: local-path-config
+  namespace: local-path-storage
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    app: local-volume-provisioner
-  name: local-volume-provisioner
-  namespace: kube-system
+  name: local-path-provisioner
+  namespace: local-path-storage
 spec:
   selector:
     matchLabels:
-      app: local-volume-provisioner
+      app: local-path-provisioner
   template:
     metadata:
       labels:
-        app: local-volume-provisioner
+        app: local-path-provisioner
     spec:
       containers:
-      - env:
-        - name: MY_NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        - name: MY_NAMESPACE
+      - command:
+        - local-path-provisioner
+        - --debug
+        - start
+        - --config
+        - /etc/config/config.json
+        env:
+        - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: JOB_CONTAINER_IMAGE
-          value: quay.io/external_storage/local-volume-provisioner:v2.3.4
-        image: quay.io/external_storage/local-volume-provisioner:v2.3.4
-        name: provisioner
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        securityContext:
-          privileged: true
+        image: docker.io/rancher/local-path-provisioner:v0.0.24
+        imagePullPolicy: IfNotPresent
+        name: local-path-provisioner
         volumeMounts:
-        - mountPath: /etc/provisioner/config
-          name: provisioner-config
-          readOnly: true
-        - mountPath: /mnt/disks
-          mountPropagation: HostToContainer
-          name: local-disks
-      serviceAccountName: local-storage-admin
+        - mountPath: /etc/config/
+          name: config-volume
+      serviceAccountName: local-path-provisioner-service-account
       volumes:
       - configMap:
-          name: local-provisioner-config
-        name: provisioner-config
-      - hostPath:
-          path: /mnt/disks
-        name: local-disks
+          name: local-path-config
+        name: config-volume
