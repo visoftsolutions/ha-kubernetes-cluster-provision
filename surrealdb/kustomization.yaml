@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: surrealdb
+helmCharts:
+- name: surrealdb
+  repo: https://helm.surrealdb.com
+  releaseName: tidb-operator
+  namespace: surrealdb
+  valuesFile: values-surrealdb.yaml
+
+resources:
+  - namespace.yaml

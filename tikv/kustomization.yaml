@@ -1,7 +1,2 @@
 resources:
   - https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml
-  - local-path-provisioner.yaml
-  # - https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/local-dind/local-volume-provisioner.yaml
-
-# https://docs-archive.pingcap.com/tidb-in-kubernetes/v1.0/deploy-tidb-operator
-# https://github.com/rancher/local-path-provisioner/tree/master

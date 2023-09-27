@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: surrealdb
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: surrealdb
+    app.kubernetes.io/version: 1.0.0-beta.10
+    helm.sh/chart: surrealdb-0.2.0
+  name: tidb-operator-surrealdb
+  namespace: surrealdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: surrealdb
+    app.kubernetes.io/version: 1.0.0-beta.10
+    helm.sh/chart: surrealdb-0.2.0
+  name: tidb-operator-surrealdb
+  namespace: surrealdb
+spec:
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/name: surrealdb
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: surrealdb
+    app.kubernetes.io/version: 1.0.0-beta.10
+    helm.sh/chart: surrealdb-0.2.0
+  name: tidb-operator-surrealdb
+  namespace: surrealdb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: tidb-operator
+      app.kubernetes.io/name: surrealdb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: tidb-operator
+        app.kubernetes.io/name: surrealdb
+    spec:
+      containers:
+      - args:
+        - start
+        env:
+        - name: SURREAL_NO_BANNER
+          value: "true"
+        - name: SURREAL_PATH
+          value: tikv://tidb-cluster-pd.tidb-admin:2379
+        - name: SURREAL_LOG
+          value: info
+        - name: SURREAL_BIND
+          value: 0.0.0.0:8000
+        - name: SURREAL_AUTH
+          value: "false"
+        image: docker.io/surrealdb/surrealdb:1.0.0-beta.10
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        name: surrealdb
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+        resources: {}
+        securityContext: {}
+      securityContext: {}
+      serviceAccountName: tidb-operator-surrealdb
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    helm.sh/hook: test
+  labels:
+    app.kubernetes.io/instance: tidb-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: surrealdb
+    app.kubernetes.io/version: 1.0.0-beta.10
+    helm.sh/chart: surrealdb-0.2.0
+  name: tidb-operator-surrealdb-isready
+  namespace: surrealdb
+spec:
+  containers:
+  - args:
+    - isready
+    - -c
+    - tidb-operator-surrealdb:8000
+    image: docker.io/surrealdb/surrealdb:1.0.0-beta.10
+    name: test-isready
+  restartPolicy: Never
