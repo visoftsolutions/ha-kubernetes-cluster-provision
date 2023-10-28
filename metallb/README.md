@@ -28,3 +28,6 @@ kubectl delete -f generated-manifests.yaml
 kubectl get pods -n metallb-system --field-selector=status.phase=Succeeded -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n metallb-system
 kubectl get pods -n metallb-system --field-selector=status.phase=Failed -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n metallb-system
 ```
+
+#### Note
+Metallb needs to restart once because of crd are not yet present but IpAddressPool is defined so it needs to reboot once

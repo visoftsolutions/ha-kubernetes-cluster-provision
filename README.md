@@ -11,9 +11,11 @@
 - [ingress-nginx](ingress-nginx/README.md)
 - [tidb](tidb/README.md)
 - [surrealdb](surrealdb/README.md)
+- [docker-registry](docker-registry/README.md)
 
 ## All Packages
 
+- [docker-registry](docker-registry/README.md)
 - [cert-manager](cert-manager/README.md)
 - [ingress-nginx](ingress-nginx/README.md)
 - [metallb](metallb/README.md)

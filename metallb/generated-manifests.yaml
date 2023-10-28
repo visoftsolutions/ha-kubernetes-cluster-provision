@@ -1601,7 +1601,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-controller
-  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1621,7 +1620,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-speaker
-  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -2153,7 +2151,16 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 10.4.4.200-10.4.4.220
+  - 10.4.4.160-10.4.4.180
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: l2advertisment
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - pool
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
