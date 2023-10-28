@@ -22,3 +22,13 @@ This utilizes the powerful kustomize tool to compile resources with Helm support
 ```sh
 kubectl delete -f generated-manifests.yaml
 ```
+
+### Delete all completed pods
+```sh
+kubectl get pods -n tidb-admin --field-selector=status.phase=Succeeded -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n tidb-admin
+```
+
+### Delete all failed pods
+```sh
+kubectl get pods -n tidb-admin --field-selector=status.phase=Failed -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n tidb-admin
+```

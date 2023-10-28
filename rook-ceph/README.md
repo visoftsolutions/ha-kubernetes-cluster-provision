@@ -22,3 +22,9 @@ This utilizes the powerful kustomize tool to compile resources with Helm support
 ```sh
 kubectl delete -f generated-manifests.yaml
 ```
+
+### Delete all completed or failed pods
+```sh
+kubectl get pods -n rook-ceph --field-selector=status.phase=Succeeded -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n rook-ceph
+kubectl get pods -n rook-ceph --field-selector=status.phase=Failed -o jsonpath='{.items[*].metadata.name}' | xargs kubectl delete pod -n rook-ceph
+```
