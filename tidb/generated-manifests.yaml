@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-discovery
   namespace: tidb-admin
 ---
@@ -23,7 +23,7 @@ metadata:
     app.kubernetes.io/instance: tidb-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-operator
-    helm.sh/chart: tidb-operator-v1.5.0
+    helm.sh/chart: tidb-operator-v1.5.1
   name: tidb-controller-manager
   namespace: tidb-admin
 ---
@@ -35,7 +35,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-discovery
   namespace: tidb-admin
 rules:
@@ -63,7 +63,7 @@ metadata:
     app.kubernetes.io/instance: tidb-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-operator
-    helm.sh/chart: tidb-operator-v1.5.0
+    helm.sh/chart: tidb-operator-v1.5.1
   name: tidb-operator:tidb-controller-manager
 rules:
 - apiGroups:
@@ -232,7 +232,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-discovery
   namespace: tidb-admin
 roleRef:
@@ -252,7 +252,7 @@ metadata:
     app.kubernetes.io/instance: tidb-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-operator
-    helm.sh/chart: tidb-operator-v1.5.0
+    helm.sh/chart: tidb-operator-v1.5.1
   name: tidb-operator:tidb-controller-manager
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -369,7 +369,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-pd-cfa0d77a
   namespace: tidb-admin
 ---
@@ -437,7 +437,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-tidb
   namespace: tidb-admin
 ---
@@ -505,7 +505,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-tidb-866b9771
   namespace: tidb-admin
 ---
@@ -533,7 +533,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-tikv-1c8d5543
   namespace: tidb-admin
 ---
@@ -545,7 +545,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-discovery
   namespace: tidb-admin
 spec:
@@ -568,7 +568,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-tidb
   namespace: tidb-admin
 spec:
@@ -595,7 +595,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster-discovery
   namespace: tidb-admin
 spec:
@@ -642,7 +642,7 @@ metadata:
     app.kubernetes.io/instance: tidb-operator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-operator
-    helm.sh/chart: tidb-operator-v1.5.0
+    helm.sh/chart: tidb-operator-v1.5.1
   name: tidb-controller-manager
   namespace: tidb-admin
 spec:
@@ -711,7 +711,7 @@ metadata:
     app.kubernetes.io/instance: tidb-cluster
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: tidb-cluster
-    helm.sh/chart: tidb-cluster-v1.5.0
+    helm.sh/chart: tidb-cluster-v1.5.1
   name: tidb-cluster
   namespace: tidb-admin
 spec:
