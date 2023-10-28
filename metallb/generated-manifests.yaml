@@ -2151,12 +2151,12 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 10.4.4.160-10.4.4.180
+  - 10.4.4.150-10.4.4.200
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
-  name: l2advertisment
+  name: l2advertisement
   namespace: metallb-system
 spec:
   ipAddressPools:
