@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: registry-cert
+spec:
+  secretName: registry-tls
+
+  dnsNames:
+    - registry.internal.visoft.solutions
+
+  issuerRef:
+    name: letsencrypt-dns01
+    kind: Issuer

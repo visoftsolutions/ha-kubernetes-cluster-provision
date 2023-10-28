@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-pv-claim
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-deployment
+  labels:
+    app: registry
+spec:
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      volumes:
+        - name: registry-pv-storage
+          persistentVolumeClaim:
+            claimName: registry-pv-claim
+      containers:
+        - name: registry
+          image: docker.io/registry
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: "/var/lib/registry"
+              name: registry-pv-storage
+          resources:
+            requests:
+              cpu: 250m
+              memory: 250Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-service
+spec:
+  selector:
+    app: registry
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registry-ingress
+spec:
+  ingressClassName: ingress-nginx-internal
+  tls:
+    - hosts:
+        - registry.internal.visoft.solutions
+      secretName: registry-tls
+  rules:
+    - host: registry.internal.visoft.solutions
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: registry-service
+                port:
+                  number: 80

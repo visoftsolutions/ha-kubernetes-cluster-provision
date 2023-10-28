@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: docker-registry-internal
+
+resources:
+  - namespace.yaml
+  - issuer.yaml
+  - certificates.yaml
+  - registry.yaml
+
+secretGenerator:
+  - name: letsencrypt-cloudflare-api-token-secret
+    env: ./enviroment/letsencrypt-cloudflare-api-token-secret.env
+
+generatorOptions:
+  disableNameSuffixHash: true
