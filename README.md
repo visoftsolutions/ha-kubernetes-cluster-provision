@@ -12,9 +12,11 @@
 - [tidb](tidb/README.md)
 - [surrealdb](surrealdb/README.md)
 - [docker-registry](docker-registry/README.md)
+- [kube-prometheus-stack](kube-prometheus-stack/README.md)
 
 ## All Packages
 
+- [kube-prometheus-stack](kube-prometheus-stack/README.md)
 - [docker-registry](docker-registry/README.md)
 - [cert-manager](cert-manager/README.md)
 - [ingress-nginx](ingress-nginx/README.md)
