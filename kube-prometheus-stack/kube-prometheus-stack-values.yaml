@@ -1,0 +1,21 @@
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-storage
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+    scrapeInterval: "5s"
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: ingress-nginx-internal
+    hosts:
+      - grafana.internal.visoft.solutions
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.internal.visoft.solutions
