@@ -94,7 +94,6 @@ metadata:
   namespace: docker-registry-internal
 spec:
   acme:
-    email: pavlnowak@gmail.com
     privateKeySecretRef:
       name: letsencrypt-dns01-account-key
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -111,6 +110,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
   name: registry-ingress
   namespace: docker-registry-internal
 spec:
