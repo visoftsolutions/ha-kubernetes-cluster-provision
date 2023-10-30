@@ -1243,8 +1243,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-controller
   namespace: metallb-system
 ---
@@ -1256,8 +1256,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-speaker
   namespace: metallb-system
 ---
@@ -1268,8 +1268,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-controller
   namespace: metallb-system
 rules:
@@ -1371,8 +1371,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-pod-lister
   namespace: metallb-system
 rules:
@@ -1462,8 +1462,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb:controller
 rules:
 - apiGroups:
@@ -1552,8 +1552,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb:speaker
 rules:
 - apiGroups:
@@ -1590,8 +1590,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-controller
   namespace: metallb-system
 roleRef:
@@ -1601,6 +1601,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-controller
+  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1609,8 +1610,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-pod-lister
   namespace: metallb-system
 roleRef:
@@ -1620,6 +1621,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: metallb-speaker
+  namespace: metallb-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1628,8 +1630,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb:controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1647,8 +1649,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb:speaker
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1663,18 +1665,18 @@ apiVersion: v1
 data:
   excludel2.yaml: |
     announcedInterfacesToExclude:
-    - ^docker.*
-    - ^cbr.*
-    - ^dummy.*
-    - ^virbr.*
-    - ^lxcbr.*
-    - ^veth.*
-    - ^lo$
+    - docker.*
+    - cbr.*
+    - dummy.*
+    - virbr.*
+    - lxcbr.*
+    - veth.*
+    - lo
     - ^cali.*
     - ^tunl.*
-    - ^flannel.*
-    - ^kube-ipvs.*
-    - ^cni.*
+    - flannel.*
+    - kube-ipvs.*
+    - cni.*
     - ^nodelocaldns.*
 kind: ConfigMap
 metadata:
@@ -1781,8 +1783,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-frr-startup
   namespace: metallb-system
 ---
@@ -1793,8 +1795,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: webhook-server-cert
   namespace: metallb-system
 ---
@@ -1805,8 +1807,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-webhook-service
   namespace: metallb-system
 spec:
@@ -1826,8 +1828,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-controller
   namespace: metallb-system
 spec:
@@ -1857,7 +1859,7 @@ spec:
           value: metallb-controller
         - name: METALLB_BGP_TYPE
           value: frr
-        image: quay.io/metallb/controller:v0.13.11
+        image: quay.io/metallb/controller:v0.13.10
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -1915,8 +1917,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-speaker
   namespace: metallb-system
 spec:
@@ -1961,7 +1963,7 @@ spec:
           value: /etc/frr_reloader/reloader.pid
         - name: METALLB_BGP_TYPE
           value: frr
-        image: quay.io/metallb/speaker:v0.13.11
+        image: quay.io/metallb/speaker:v0.13.10
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -2019,16 +2021,13 @@ spec:
         env:
         - name: TINI_SUBREAPER
           value: "true"
-        image: quay.io/frrouting/frr:8.5.2
+        image: quay.io/frrouting/frr:8.4.2
         livenessProbe:
           failureThreshold: 3
           httpGet:
             path: /livez
             port: 7473
-          initialDelaySeconds: 10
           periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
         name: frr
         securityContext:
           capabilities:
@@ -2050,7 +2049,7 @@ spec:
           name: frr-conf
       - command:
         - /etc/frr_reloader/frr-reloader.sh
-        image: quay.io/frrouting/frr:8.5.2
+        image: quay.io/frrouting/frr:8.4.2
         name: reloader
         volumeMounts:
         - mountPath: /var/run/frr
@@ -2063,7 +2062,7 @@ spec:
         - --metrics-port=7473
         command:
         - /etc/frr_metrics/frr-metrics
-        image: quay.io/frrouting/frr:8.5.2
+        image: quay.io/frrouting/frr:8.4.2
         name: frr-metrics
         ports:
         - containerPort: 7473
@@ -2081,7 +2080,7 @@ spec:
         - /bin/sh
         - -c
         - cp -rLf /tmp/frr/* /etc/frr/
-        image: quay.io/frrouting/frr:8.5.2
+        image: quay.io/frrouting/frr:8.4.2
         name: cp-frr-files
         securityContext:
           runAsGroup: 101
@@ -2095,7 +2094,7 @@ spec:
         - /bin/sh
         - -c
         - cp -f /frr-reloader.sh /etc/frr_reloader/
-        image: quay.io/metallb/speaker:v0.13.11
+        image: quay.io/metallb/speaker:v0.13.10
         name: cp-reloader
         volumeMounts:
         - mountPath: /etc/frr_reloader
@@ -2104,7 +2103,7 @@ spec:
         - /bin/sh
         - -c
         - cp -f /frr-metrics /etc/frr_metrics/
-        image: quay.io/metallb/speaker:v0.13.11
+        image: quay.io/metallb/speaker:v0.13.10
         name: cp-metrics
         volumeMounts:
         - mountPath: /etc/frr_metrics
@@ -2169,8 +2168,8 @@ metadata:
     app.kubernetes.io/instance: metallb
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metallb
-    app.kubernetes.io/version: v0.13.11
-    helm.sh/chart: metallb-0.13.11
+    app.kubernetes.io/version: v0.13.10
+    helm.sh/chart: metallb-0.13.10
   name: metallb-webhook-configuration
 webhooks:
 - admissionReviewVersions:
