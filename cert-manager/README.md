@@ -2,6 +2,7 @@
 
 ## 🚀 Quick Start
 ```sh
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml
 kubectl create -f generated-manifests.yaml
 ```
 This will kick off the deployment using the manifest file that we've pre-generated for you.
