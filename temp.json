@@ -1,0 +1,58 @@
+{
+  "apiVersion": "v1",
+  "kind": "Namespace",
+  "metadata": {
+    "creationTimestamp": "2023-11-25T00:30:03Z",
+    "deletionTimestamp": "2023-11-25T00:35:54Z",
+    "labels": {
+      "kubernetes.io/metadata.name": "arc-systems",
+      "name": "arc-systems"
+    },
+    "name": "arc-systems",
+    "resourceVersion": "9086637",
+    "uid": "bd12be76-16b7-413a-966c-b2190fb40b16"
+  },
+  "spec": {
+    "finalizers": []
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2023-11-25T00:35:59Z",
+        "message": "All resources successfully discovered",
+        "reason": "ResourcesDiscovered",
+        "status": "False",
+        "type": "NamespaceDeletionDiscoveryFailure"
+      },
+      {
+        "lastTransitionTime": "2023-11-25T00:35:59Z",
+        "message": "All legacy kube types successfully parsed",
+        "reason": "ParsedGroupVersions",
+        "status": "False",
+        "type": "NamespaceDeletionGroupVersionParsingFailure"
+      },
+      {
+        "lastTransitionTime": "2023-11-25T00:35:59Z",
+        "message": "All content successfully deleted, may be waiting on finalization",
+        "reason": "ContentDeleted",
+        "status": "False",
+        "type": "NamespaceDeletionContentFailure"
+      },
+      {
+        "lastTransitionTime": "2023-11-25T00:35:59Z",
+        "message": "Some resources are remaining: autoscalinglisteners.actions.github.com has 1 resource instances, autoscalingrunnersets.actions.github.com has 1 resource instances, rolebindings.rbac.authorization.k8s.io has 1 resource instances, roles.rbac.authorization.k8s.io has 1 resource instances",
+        "reason": "SomeResourcesRemain",
+        "status": "True",
+        "type": "NamespaceContentRemaining"
+      },
+      {
+        "lastTransitionTime": "2023-11-25T00:35:59Z",
+        "message": "Some content in the namespace has finalizers remaining: actions.github.com/cleanup-protection in 2 resource instances, autoscalinglistener.actions.github.com/finalizer in 1 resource instances, autoscalingrunnerset.actions.github.com/finalizer in 1 resource instances",
+        "reason": "SomeFinalizersRemain",
+        "status": "True",
+        "type": "NamespaceFinalizersRemaining"
+      }
+    ],
+    "phase": "Terminating"
+  }
+}
